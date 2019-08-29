@@ -1,66 +1,89 @@
 public class Duke {
-    private static String logo = addIndent() + "____        _        \n"
-        + addIndent() + "|  _ \\ _   _| | _____ \n"
-        + addIndent() + "| | | | | | | |/ / _ \\\n"
-        + addIndent() + "| |_| | |_| |   <  __/\n"
-        + addIndent() + "|____/ \\__,_|_|\\_\\___|\n";
+    private static String logo = "____        _        \n"
+        + "|  _ \\ _   _| | _____ \n"
+        + "| | | | | | | |/ / _ \\\n"
+        + "| |_| | |_| |   <  __/\n"
+        + "|____/ \\__,_|_|\\_\\___|\n";
 
     public static void main(String[] args) {
         System.out.print(logo + "\n");
-        printOutput(addIndent() + "Greetings, I am Duke!\n" + addIndent()
-                + "How may I be of assistance?\n");
+        printOutput("Greetings, I am Duke!\nHow may I be of assistance?\n");
 
         InputHandler inputReq = new InputHandler();
         TaskHandler curList = new TaskHandler();
 
         while (true) {
-            String curInput = inputReq.getInput();
-            //System.out.println(curInput);
-            //System.out.println(curInput.toLowerCase());
-            //System.out.println(curInput);
+            String[] curInput = inputReq.getInput();
 
-            if (curInput.toLowerCase().equals("bye")) {
+            if (curInput[0].toLowerCase().equals("bye")) {
                 quitFunc();
                 break;
             }
 
-            else if (curInput.toLowerCase().equals("list")) {
+            else if (curInput[0].toLowerCase().equals("list")) {
                 if (curList.getListLength() == 0) {
-                    printOutput(addIndent() + "Your task list is currently empty.\n");
+                    printOutput("Your task list is currently empty.\n");
                 } else {
-                    String tempString = addIndent() + "Now listing items in your task list:\n";
+                    String tempString = "Now listing items in your task list:\n";
                     for (int i = 1; i < curList.getListLength() + 1; i++) {
-                        tempString += (addIndent() + i + ". " + curList.getListItem(i - 1) + "\n");
+                        tempString += (i + ". " + curList.getListItem(i - 1).getStatus() +
+                                " " + curList.getListItem(i - 1).getDescription() + "\n");
                     }
                     printOutput(tempString);
                 }
             }
 
-            else if (curInput.toLowerCase().equals("clear")) {
-                int tempListLength = curList.getListLength()
+            else if (curInput[0].toLowerCase().equals("clear")) {
+                int tempListLength = curList.getListLength();
                 curList.clearList();
-                printOutput(addIndent() + "I have cleared your task list of " +
+                printOutput("I have cleared your task list of " +
                          tempListLength + " items.\n");
             }
 
+            else if (curInput[0].toLowerCase().equals("done")) {
+                if (curInput.length == 1) {
+                    printOutput("Please input a task number to mark as complete.\n");
+                }
+                else {
+                    int listNumCompleted = Integer.parseInt(curInput[1]);
+
+                    if (curList.getListLength() == 0) {
+                        printOutput("There are no tasks to complete.\n");
+                    } else if (listNumCompleted > curList.getListLength()) {
+                        printOutput("My apologies. There is no task numbered " + listNumCompleted +
+                                " in your task list.\n");
+                    } else {
+                        curList.markItemComplete(listNumCompleted);
+                        printOutput("Splendid. I have marked the following task as completed:\n    " +
+                                curList.getListItem(listNumCompleted - 1).getStatus() + " " +
+                                curList.getListItem(listNumCompleted - 1).getDescription() + "\n");
+                    }
+                }
+            }
+
             else {
-                curList.addListItem(curInput);
-                printOutput("I have added: '" + curInput + "'.\n");
+                curList.addListItem(curInput[0]);
+                printOutput("I have added: '" + curInput[0] + "'.\n");
             }
         }
     }
 
     private static void printOutput(String stringToOutput) {
-        System.out.print(addIndent() + "____________________________________________________________\n");
-        System.out.print(stringToOutput);
-        System.out.print(addIndent() + "____________________________________________________________\n\n");
+        System.out.println(addIndent() + "____________________________________________________________");
+
+        String[] linesToPrint = stringToOutput.split("\n", 0);
+        for (int i = 0; i < linesToPrint.length; i++) {
+            System.out.println(addIndent() + linesToPrint[i]);
+        }
+
+        System.out.println(addIndent() + "____________________________________________________________\n");
     }
     private static String addIndent() {
         return "        ";
     }
 
     private static void quitFunc() {
-        printOutput(addIndent() + "Farewell. I do hope to see you again.\n");
+        printOutput("Farewell. I do hope to see you again.\n");
     }
 
     private static void quitFunc(String optionalOutput) {

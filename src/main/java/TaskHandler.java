@@ -1,17 +1,18 @@
 import java.util.Vector;
 
 public class TaskHandler {
-    private Vector<String> taskList;
+    private Vector<Task> taskList;
 
     TaskHandler() {
         taskList = new Vector();
     }
 
     public void addListItem(String itemToAdd) {
-        taskList.add(itemToAdd);
+        Task curTask = new Task("[✗]", itemToAdd);
+        taskList.add(curTask);
     }
 
-    public String getListItem(int itemIndex) {
+    public Task getListItem(int itemIndex) {
         return taskList.get(itemIndex);
     }
 
@@ -21,5 +22,10 @@ public class TaskHandler {
 
     public void clearList() {
         taskList.clear();
+    }
+
+    public void markItemComplete(int listItemNumber) {
+        listItemNumber -= 1;
+        taskList.get(listItemNumber).setStatus("[✓]");
     }
 }
