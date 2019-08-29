@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import DukeException.*;
 
 public class Duke {
     private static String logo = "____        _        \n"
@@ -11,100 +12,133 @@ public class Duke {
         System.out.print(logo + "\n");
         printOutput("Greetings, I am Duke!\nHow may I be of assistance?\n");
 
-        //InputHandler inputReq = new InputHandler();
+        mainLoop();
+    }
+
+    private static void mainLoop() {
         Scanner myScanner = new Scanner(System.in);
         TaskGroup curList = new TaskGroup();
 
         while (true) {
-            String input = myScanner.nextLine();
-            if (input.toLowerCase().equals("bye")) {
-                quitFunc();
-                break;
-            }
+            try {
+                String input = myScanner.nextLine();
 
-            // Error handling
-            //if (input.equals("")) {
-            //}
-
-            String[] inputArr = input.split(" ", 0);
-
-            switch (inputArr[0].toLowerCase()) {
-                case "todo": {
-                    String listItem = taskInputParse(inputArr);
-                    curList.addListItem("todo", listItem);
-                    printOutput("Understood. I have added the following task to the list:\n" +
-                            addIndent(4) + curList.getListItem(curList.getListLength() - 1).getTaskType() +
-                            curList.getListItem(curList.getListLength() - 1).getStatus() + " " +
-                            curList.getListItem(curList.getListLength() - 1).getDescription() + "\n" +
-                            "Now you have " + curList.getListLength() + " in your list.\n");
+                if (input.toLowerCase().equals("bye")) {
+                    quitFunc();
                     break;
                 }
-                case "deadline": {
-                    String listItem = taskInputParse(inputArr);
-                    curList.addListItem("deadline", listItem);
-                    printOutput("Understood. I have added the following task to the list:\n" +
-                            addIndent(4) + curList.getListItem(curList.getListLength() - 1).getTaskType() +
-                            curList.getListItem(curList.getListLength() - 1).getStatus() + " " +
-                            curList.getListItem(curList.getListLength() - 1).getDescription() + "\n" +
-                            "Now you have " + curList.getListLength() + " in your list.\n");
-                    break;
-                }
-                case "event": {
-                    String listItem = taskInputParse(inputArr);
-                    curList.addListItem("event", listItem);
-                    printOutput("Understood. I have added the following task to the list:\n" +
-                            addIndent(4) + curList.getListItem(curList.getListLength() - 1).getTaskType() +
-                            curList.getListItem(curList.getListLength() - 1).getStatus() + " " +
-                            curList.getListItem(curList.getListLength() - 1).getDescription() + "\n" +
-                            "Now you have " + curList.getListLength() + " in your list.\n");
-                    break;
-                }
-                case "list":
-                    if (curList.getListLength() == 0) {
-                        printOutput("Your task list is currently empty.\n");
-                    } else {
-                        String tempString = "Now listing items in your task list:\n";
-                        for (int i = 1; i < curList.getListLength() + 1; i++) {
-                            tempString += (i + ". " + curList.getListItem(i - 1).getTaskType() +
-                                    curList.getListItem(i - 1).getStatus() +
-                                    " " + curList.getListItem(i - 1).getDescription() + "\n");
-                        }
-                        printOutput(tempString);
+                String[] inputArr = input.split(" ", 0);
+
+                switch (inputArr[0].toLowerCase()) {
+                    case "todo": {
+                        incompleteCommandCheck(inputArr);
+                        String listItem = taskInputParse(inputArr);
+                        curList.addListItem("todo", listItem);
+                        printOutput("Understood. I have added the following task to the list:\n" +
+                                addIndent(4) + curList.getListItem(curList.getListLength() - 1).getTaskType() +
+                                curList.getListItem(curList.getListLength() - 1).getStatus() + " " +
+                                curList.getListItem(curList.getListLength() - 1).getDescription() + "\n" +
+                                "Now you have " + curList.getListLength() + " in your list.\n");
+                        break;
                     }
-                    break;
-                case "clear":
-                    int tempListLength = curList.getListLength();
-                    curList.clearList();
-                    printOutput("I have cleared your task list of " +
-                            tempListLength + " items.\n");
-                    break;
-                case "done":
-                    if (inputArr.length == 1) {
-                        printOutput("Please input a task number to mark as complete.\n");
-                    } else {
-                        int listNumCompleted = Integer.parseInt(inputArr[1]);
 
+                    case "deadline": {
+                        incompleteCommandCheck(inputArr);
+                        String listItem = taskInputParse(inputArr);
+                        curList.addListItem("deadline", listItem);
+                        printOutput("Understood. I have added the following task to the list:\n" +
+                                addIndent(4) + curList.getListItem(curList.getListLength() - 1).getTaskType() +
+                                curList.getListItem(curList.getListLength() - 1).getStatus() + " " +
+                                curList.getListItem(curList.getListLength() - 1).getDescription() + "\n" +
+                                "Now you have " + curList.getListLength() + " in your list.\n");
+                        break;
+                    }
+
+                    case "event": {
+                        incompleteCommandCheck(inputArr);
+                        String listItem = taskInputParse(inputArr);
+                        curList.addListItem("event", listItem);
+                        printOutput("Understood. I have added the following task to the list:\n" +
+                                addIndent(4) + curList.getListItem(curList.getListLength() - 1).getTaskType() +
+                                curList.getListItem(curList.getListLength() - 1).getStatus() + " " +
+                                curList.getListItem(curList.getListLength() - 1).getDescription() + "\n" +
+                                "Now you have " + curList.getListLength() + " in your list.\n");
+                        break;
+                    }
+
+                    case "list": {
                         if (curList.getListLength() == 0) {
-                            printOutput("There are no tasks to complete.\n");
-                        } else if (listNumCompleted > curList.getListLength()) {
-                            printOutput("My apologies. There is no task numbered " + listNumCompleted +
-                                    " in your task list.\n");
+                            printOutput("Your task list is currently empty.\n");
                         } else {
-                            curList.markItemComplete(listNumCompleted);
-                            printOutput("Splendid. I have marked the following task as completed:\n" +
-                                    addIndent(4) + curList.getListItem(listNumCompleted - 1).getStatus() +
-                                    " " + curList.getListItem(listNumCompleted - 1).getDescription() + "\n");
+                            String tempString = "Now listing items in your task list:\n";
+                            for (int i = 1; i < curList.getListLength() + 1; i++) {
+                                tempString += (i + ". " + curList.getListItem(i - 1).getTaskType() +
+                                        curList.getListItem(i - 1).getStatus() +
+                                        " " + curList.getListItem(i - 1).getDescription() + "\n");
+                            }
+                            printOutput(tempString);
                         }
+                        break;
                     }
-                    break;
+
+                    case "clear": {
+                        int tempListLength = curList.getListLength();
+                        curList.clearList();
+                        printOutput("I have cleared your task list of " +
+                                tempListLength + " items.\n");
+                        break;
+                    }
+
+                    case "done": {
+                        if (inputArr.length == 1) {
+                            printOutput("Please input a task number to mark as complete.\n");
+                        } else {
+                            try {
+                                int listNumCompleted = Integer.parseInt(inputArr[1]);
+
+                                if (curList.getListLength() == 0) {
+                                    printOutput("There are no tasks to complete.\n");
+                                } else if (listNumCompleted > curList.getListLength()) {
+                                    printOutput("My apologies. There is no task numbered " + listNumCompleted +
+                                            " in your task list.\n");
+                                } else {
+                                    curList.markItemComplete(listNumCompleted);
+                                    printOutput("Splendid. I have marked the following task as completed:\n" +
+                                            addIndent(4) + curList.getListItem(listNumCompleted - 1).getStatus() +
+                                            " " + curList.getListItem(listNumCompleted - 1).getDescription() + "\n");
+                                }
+                            } catch(NumberFormatException e) {
+                                throw new NumberFormatException("'done' command's argument must be a numerical value.");
+                            }
+                        }
+                        break;
+                    }
+
+                    default: {
+                        unknownInput(input);
+                    }
+                }
+            } catch(IncompleteCommandException | UnknownInputException | NumberFormatException b) {
+                printOutput(b.getMessage());
             }
         }
+    }
+
+    private static void incompleteCommandCheck(String[] inputArr) throws IncompleteCommandException {
+        if (inputArr.length == 1) {
+            throw new IncompleteCommandException("'" + inputArr[0].toLowerCase() +
+                    "' command requires 1 or more arguments.");
+        }
+    }
+
+    private static void unknownInput(String input) throws UnknownInputException {
+        throw new UnknownInputException("Apologies, but '" + input + "' is an invalid input");
     }
 
     private static String taskInputParse(String[] inputArr) {
         int index = 1;
         String action = "";
-        String dateTime = "(by: ";
+        String dateTime = "";
         boolean dateTimeFound = false;
 
         for (; index < inputArr.length - 1; index++) {
@@ -116,14 +150,16 @@ public class Duke {
                 action += (inputArr[index] + " ");
             }
         }
-        //action += inputArr[index];
 
         if (dateTimeFound) {
+            dateTime = "(by: ";
             for (; index < inputArr.length - 1; index++) {
                 dateTime += (inputArr[index] + " ");
             }
+            dateTime += (inputArr[inputArr.length - 1] + ")");
+        } else {
+            action += inputArr[index];
         }
-        dateTime += (inputArr[inputArr.length - 1] + ")");
 
         return action + dateTime;
     }
