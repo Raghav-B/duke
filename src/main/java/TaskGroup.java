@@ -1,14 +1,24 @@
+import Task.*;
 import java.util.Vector;
 
-public class TaskHandler {
+public class TaskGroup {
     private Vector<Task> taskList;
 
-    TaskHandler() {
-        taskList = new Vector();
+    TaskGroup() {
+        taskList = new Vector<Task>();
     }
 
-    public void addListItem(String itemToAdd) {
+    public void addListItem(String itemType, String itemToAdd) {
         Task curTask = new Task("[✗]", itemToAdd);
+
+        if (itemType.equals("todo")) {
+            curTask = new ToDo("[✗]", itemToAdd);
+        } else if (itemType.equals("deadline")) {
+            curTask = new Deadline("[✗]", itemToAdd);
+        } else {
+            curTask = new Event("[✗]", itemToAdd);
+        }
+
         taskList.add(curTask);
     }
 

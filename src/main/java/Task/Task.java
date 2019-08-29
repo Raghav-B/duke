@@ -1,8 +1,10 @@
+package Task;
+
 public class Task {
     private String status;
     private String description;
 
-    Task(String status, String description) {
+    public Task(String status, String description) {
         this.status = status;
         this.description = description;
     }
@@ -22,4 +24,9 @@ public class Task {
     public String getDescription() {
         return this.description;
     }
+
+    public String getTaskType() {
+        return "default";
+    }
 }
+

@@ -1,9 +1,13 @@
+import Task.*;
 import java.util.Scanner;
 
 public class InputHandler {
+
     public static String[] getInput() {
         Scanner myScanner = new Scanner(System.in);
         String input = myScanner.nextLine();
+
+
 
         String[] inputArr = input.split(" ", 0);
         if (inputArr[0].equals("done")) {
@@ -12,21 +16,24 @@ public class InputHandler {
                 try {
                     int testNum = Integer.parseInt(inputArr[1]);
                 } catch (NumberFormatException e) {
-                    inputArr[0] = restoreString(inputArr);
+                    inputArr[0] = restoreString(inputArr, 0);
                 }
             } else {
-                inputArr[0] = restoreString(inputArr);
+                inputArr[0] = restoreString(inputArr, 0);
             }
-        } else {
-            inputArr[0] = restoreString(inputArr);
+        }
+        else {
+            inputArr[0] = restoreString(inputArr, 0);
         }
 
         return inputArr;
     }
 
-    private static String restoreString(String[] stringArr) {
+
+
+    public static String restoreString(String[] stringArr, int startIndex) {
         String resultString = "";
-        for (int i = 0; i < stringArr.length - 1; i++) {
+        for (int i = startIndex; i < stringArr.length - 1; i++) {
             resultString += (stringArr[i] + " ");
         }
         resultString += stringArr[stringArr.length - 1];
