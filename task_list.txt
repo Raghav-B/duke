@@ -1,1 +1,2 @@
-[T] | [✗] | nothing
+[E] | [✓] | nothing
+[E] | [✓] | hate me (by: now)

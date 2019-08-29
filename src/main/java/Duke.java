@@ -18,6 +18,11 @@ public class Duke {
     private static void mainLoop() {
         Scanner myScanner = new Scanner(System.in);
         TaskGroup curList = new TaskGroup();
+        try {
+            curList.loadList();
+        } catch(Exception e) {
+            printOutput(e.getMessage());
+        }
 
         while (true) {
             try {
@@ -34,7 +39,7 @@ public class Duke {
                         incompleteCommandCheck(inputArr);
                         String listItem = taskInputParse(inputArr);
                         try {
-                            curList.addListItem("todo", listItem);
+                            curList.addListItem("todo", "[✗]", listItem);
                         } catch(Exception e) {
                             printOutput(e.getMessage());
                         }
@@ -42,7 +47,7 @@ public class Duke {
                                 addIndent(4) + curList.getListItem(curList.getListLength() - 1).getTaskType() +
                                 curList.getListItem(curList.getListLength() - 1).getStatus() + " " +
                                 curList.getListItem(curList.getListLength() - 1).getDescription() + "\n" +
-                                "Now you have " + curList.getListLength() + " in your list.\n");
+                                "Now you have " + curList.getListLength() + " tasks in your list.\n");
                         break;
                     }
 
@@ -50,7 +55,7 @@ public class Duke {
                         incompleteCommandCheck(inputArr);
                         String listItem = taskInputParse(inputArr);
                         try {
-                            curList.addListItem("deadline", listItem);
+                            curList.addListItem("deadline", "[✗]", listItem);
                         } catch(Exception e) {
                             printOutput(e.getMessage());
                         }
@@ -58,7 +63,7 @@ public class Duke {
                                 addIndent(4) + curList.getListItem(curList.getListLength() - 1).getTaskType() +
                                 curList.getListItem(curList.getListLength() - 1).getStatus() + " " +
                                 curList.getListItem(curList.getListLength() - 1).getDescription() + "\n" +
-                                "Now you have " + curList.getListLength() + " in your list.\n");
+                                "Now you have " + curList.getListLength() + " tasks in your list.\n");
                         break;
                     }
 
@@ -66,7 +71,7 @@ public class Duke {
                         incompleteCommandCheck(inputArr);
                         String listItem = taskInputParse(inputArr);
                         try {
-                            curList.addListItem("event", listItem);
+                            curList.addListItem("event", "[✗]", listItem);
                         } catch(Exception e) {
                             printOutput(e.getMessage());
                         }
@@ -74,7 +79,7 @@ public class Duke {
                                 addIndent(4) + curList.getListItem(curList.getListLength() - 1).getTaskType() +
                                 curList.getListItem(curList.getListLength() - 1).getStatus() + " " +
                                 curList.getListItem(curList.getListLength() - 1).getDescription() + "\n" +
-                                "Now you have " + curList.getListLength() + " in your list.\n");
+                                "Now you have " + curList.getListLength() + " tasks in your list.\n");
                         break;
                     }
 
@@ -114,9 +119,14 @@ public class Duke {
                                     printOutput("My apologies. There is no task numbered " + listNumCompleted +
                                             " in your task list.\n");
                                 } else {
-                                    curList.markItemComplete(listNumCompleted);
+                                    try {
+                                        curList.markItemComplete(listNumCompleted);
+                                    } catch(Exception e) {
+                                        printOutput(e.getMessage());
+                                    }
                                     printOutput("Splendid. I have marked the following task as completed:\n" +
-                                            addIndent(4) + curList.getListItem(listNumCompleted - 1).getStatus() +
+                                            addIndent(4) + curList.getListItem(listNumCompleted - 1).getTaskType() +
+                                            curList.getListItem(listNumCompleted - 1).getStatus() +
                                             " " + curList.getListItem(listNumCompleted - 1).getDescription() + "\n");
                                 }
                             } catch(NumberFormatException e) {
