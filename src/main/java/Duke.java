@@ -37,9 +37,9 @@ public class Duke {
                 switch (inputArr[0].toLowerCase()) {
                     case "todo": {
                         incompleteCommandCheck(inputArr);
-                        String listItem = taskInputParse(inputArr);
+                        //String listItem = taskInputParse(inputArr);
                         try {
-                            curList.addListItem("todo", "[✗]", listItem);
+                            curList.addListItem("todo", "[✗]", input);
                         } catch(Exception e) {
                             printOutput(e.getMessage());
                         }
@@ -53,9 +53,9 @@ public class Duke {
 
                     case "deadline": {
                         incompleteCommandCheck(inputArr);
-                        String listItem = taskInputParse(inputArr);
+                        //String listItem = taskInputParse(inputArr);
                         try {
-                            curList.addListItem("deadline", "[✗]", listItem);
+                            curList.addListItem("deadline", "[✗]", input);
                         } catch(Exception e) {
                             printOutput(e.getMessage());
                         }
@@ -69,9 +69,9 @@ public class Duke {
 
                     case "event": {
                         incompleteCommandCheck(inputArr);
-                        String listItem = taskInputParse(inputArr);
+                        //String listItem = taskInputParse(inputArr);
                         try {
-                            curList.addListItem("event", "[✗]", listItem);
+                            curList.addListItem("event", "[✗]", input);
                         } catch(Exception e) {
                             printOutput(e.getMessage());
                         }

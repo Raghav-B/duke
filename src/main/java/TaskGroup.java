@@ -99,7 +99,7 @@ public class TaskGroup {
                 itemType = "event";
             }
 
-            addListItemNoSave(itemType, readLineArr[1], readLineArr[2]);
+            addListItemNoSave(itemType, readLineArr[1], readLine);
         }
     }
 }
