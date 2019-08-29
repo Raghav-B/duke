@@ -1,5 +1,8 @@
 import Task.*;
+
+import java.io.IOException;
 import java.util.Vector;
+import java.io.FileWriter;
 
 public class TaskGroup {
     private Vector<Task> taskList;
@@ -8,7 +11,7 @@ public class TaskGroup {
         taskList = new Vector<Task>();
     }
 
-    public void addListItem(String itemType, String itemToAdd) {
+    public void addListItem(String itemType, String itemToAdd) throws Exception {
         Task curTask = new Task("[✗]", itemToAdd);
 
         if (itemType.equals("todo")) {
@@ -20,6 +23,11 @@ public class TaskGroup {
         }
 
         taskList.add(curTask);
+        try {
+            saveList();
+        } catch(Exception e) {
+            throw e;
+        }
     }
 
     public Task getListItem(int itemIndex) {
@@ -37,5 +45,22 @@ public class TaskGroup {
     public void markItemComplete(int listItemNumber) {
         listItemNumber -= 1;
         taskList.get(listItemNumber).setStatus("[✓]");
+    }
+
+    public void saveList() throws Exception {
+        FileWriter fw = new FileWriter("./task_list.txt");
+
+        String stringToWrite = "";
+        for (int i = 0; i < getListLength(); i++) {
+            stringToWrite += (taskList.get(i).getTaskType() + " | " + taskList.get(i).getStatus() + " | " +
+                    taskList.get(i).getDescription() + "\n");
+        }
+
+        fw.write(stringToWrite);
+        fw.close();
+    }
+
+    public void loadList() {
+        return;
     }
 }

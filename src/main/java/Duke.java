@@ -33,7 +33,11 @@ public class Duke {
                     case "todo": {
                         incompleteCommandCheck(inputArr);
                         String listItem = taskInputParse(inputArr);
-                        curList.addListItem("todo", listItem);
+                        try {
+                            curList.addListItem("todo", listItem);
+                        } catch(Exception e) {
+                            printOutput(e.getMessage());
+                        }
                         printOutput("Understood. I have added the following task to the list:\n" +
                                 addIndent(4) + curList.getListItem(curList.getListLength() - 1).getTaskType() +
                                 curList.getListItem(curList.getListLength() - 1).getStatus() + " " +
@@ -45,7 +49,11 @@ public class Duke {
                     case "deadline": {
                         incompleteCommandCheck(inputArr);
                         String listItem = taskInputParse(inputArr);
-                        curList.addListItem("deadline", listItem);
+                        try {
+                            curList.addListItem("deadline", listItem);
+                        } catch(Exception e) {
+                            printOutput(e.getMessage());
+                        }
                         printOutput("Understood. I have added the following task to the list:\n" +
                                 addIndent(4) + curList.getListItem(curList.getListLength() - 1).getTaskType() +
                                 curList.getListItem(curList.getListLength() - 1).getStatus() + " " +
@@ -57,7 +65,11 @@ public class Duke {
                     case "event": {
                         incompleteCommandCheck(inputArr);
                         String listItem = taskInputParse(inputArr);
-                        curList.addListItem("event", listItem);
+                        try {
+                            curList.addListItem("event", listItem);
+                        } catch(Exception e) {
+                            printOutput(e.getMessage());
+                        }
                         printOutput("Understood. I have added the following task to the list:\n" +
                                 addIndent(4) + curList.getListItem(curList.getListLength() - 1).getTaskType() +
                                 curList.getListItem(curList.getListLength() - 1).getStatus() + " " +
