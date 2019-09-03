@@ -3,8 +3,8 @@ package Task;
 public class ToDo extends Task {
     private String taskType;
 
-    public ToDo(String status, String description) {
-        super(status, description);
+    public ToDo(String[] description, String status) {
+        super(description, status);
         this.taskType = "[T]";
     }
 

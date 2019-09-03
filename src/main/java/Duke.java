@@ -35,43 +35,13 @@ public class Duke {
                 String[] inputArr = input.split(" ", 0);
 
                 switch (inputArr[0].toLowerCase()) {
-                    case "todo": {
-                        incompleteCommandCheck(inputArr);
-                        //String listItem = taskInputParse(inputArr);
-                        try {
-                            curList.addListItem("todo", "[✗]", input);
-                        } catch(Exception e) {
-                            printOutput(e.getMessage());
-                        }
-                        printOutput("Understood. I have added the following task to the list:\n" +
-                                addIndent(4) + curList.getListItem(curList.getListLength() - 1).getTaskType() +
-                                curList.getListItem(curList.getListLength() - 1).getStatus() + " " +
-                                curList.getListItem(curList.getListLength() - 1).getDescription() + "\n" +
-                                "Now you have " + curList.getListLength() + " tasks in your list.\n");
-                        break;
-                    }
-
-                    case "deadline": {
-                        incompleteCommandCheck(inputArr);
-                        //String listItem = taskInputParse(inputArr);
-                        try {
-                            curList.addListItem("deadline", "[✗]", input);
-                        } catch(Exception e) {
-                            printOutput(e.getMessage());
-                        }
-                        printOutput("Understood. I have added the following task to the list:\n" +
-                                addIndent(4) + curList.getListItem(curList.getListLength() - 1).getTaskType() +
-                                curList.getListItem(curList.getListLength() - 1).getStatus() + " " +
-                                curList.getListItem(curList.getListLength() - 1).getDescription() + "\n" +
-                                "Now you have " + curList.getListLength() + " tasks in your list.\n");
-                        break;
-                    }
-
+                    case "todo":
+                    case "deadline":
                     case "event": {
                         incompleteCommandCheck(inputArr);
                         //String listItem = taskInputParse(inputArr);
                         try {
-                            curList.addListItem("event", "[✗]", input);
+                            curList.addListItem(inputArr, "[✗]");
                         } catch(Exception e) {
                             printOutput(e.getMessage());
                         }
@@ -155,35 +125,6 @@ public class Duke {
 
     private static void unknownInput(String input) throws UnknownInputException {
         throw new UnknownInputException("Apologies, but '" + input + "' is an invalid input");
-    }
-
-    private static String taskInputParse(String[] inputArr) {
-        int index = 1;
-        String action = "";
-        String dateTime = "";
-        boolean dateTimeFound = false;
-
-        for (; index < inputArr.length - 1; index++) {
-            if (inputArr[index].equals("/by")) {
-                index += 1;
-                dateTimeFound = true;
-                break;
-            } else {
-                action += (inputArr[index] + " ");
-            }
-        }
-
-        if (dateTimeFound) {
-            dateTime = "(by: ";
-            for (; index < inputArr.length - 1; index++) {
-                dateTime += (inputArr[index] + " ");
-            }
-            dateTime += (inputArr[inputArr.length - 1] + ")");
-        } else {
-            action += inputArr[index];
-        }
-
-        return action + dateTime;
     }
 
     private static void printOutput(String stringToOutput) {

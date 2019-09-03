@@ -3,6 +3,7 @@ import Task.*;
 import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.Arrays;
 import java.util.Vector;
 import java.io.File;
 import java.io.FileReader;
@@ -16,33 +17,26 @@ public class TaskGroup {
         taskList = new Vector<Task>();
     }
 
-    public void addListItem(String itemType, String itemStatus, String itemToAdd) throws Exception {
-        Task curTask = new Task(itemStatus, itemToAdd);
+    public void addListItem(String[] inputArr, String itemStatus) throws Exception {
+        addListItemBase(inputArr, itemStatus);
 
-        if (itemType.equals("todo")) {
-            curTask = new ToDo(itemStatus, itemToAdd);
-        } else if (itemType.equals("deadline")) {
-            curTask = new Deadline(itemStatus, itemToAdd);
-        } else {
-            curTask = new Event(itemStatus, itemToAdd);
-        }
-
-        taskList.add(curTask);
         try {
             saveList();
         } catch(Exception e) {
             throw e;
         }
     }
-    public void addListItemNoSave(String itemType, String itemStatus, String itemToAdd) {
-        Task curTask = new Task(itemStatus, itemToAdd);
 
-        if (itemType.equals("todo")) {
-            curTask = new ToDo(itemStatus, itemToAdd);
-        } else if (itemType.equals("deadline")) {
-            curTask = new Deadline(itemStatus, itemToAdd);
-        } else {
-            curTask = new Event(itemStatus, itemToAdd);
+    public void addListItemBase(String[] inputArr, String itemStatus) {
+        Task curTask = new Task(Arrays.copyOfRange(inputArr, 1, inputArr.length - 1, String[].class), itemStatus);
+
+        String taskType = inputArr[0].toLowerCase();
+        if (taskType.equals("todo")) {
+            curTask = new ToDo(Arrays.copyOfRange(inputArr, 1, inputArr.length - 1, String[].class), itemStatus);
+        } else if (taskType.equals("deadline")) {
+            curTask = new Deadline(Arrays.copyOfRange(inputArr, 1, inputArr.length - 1, String[].class), itemStatus);
+        } else if (taskType.equals(("event"))) {
+            curTask = new Event(Arrays.copyOfRange(inputArr, 1, inputArr.length - 1, String[].class), itemStatus);
         }
 
         taskList.add(curTask);
@@ -90,16 +84,19 @@ public class TaskGroup {
             }
 
             String[] readLineArr = readLine.split(".\\|.", 0);
-            String itemType = "";
-            if (readLineArr.equals("[T]")) {
-                itemType = "todo";
-            } else if (readLineArr.equals("[D]")) {
-                itemType = "deadline";
-            } else {
-                itemType = "event";
+            String itemStatus = readLineArr[1];
+            if (readLineArr[0].equals("[T]")) {
+                readLineArr[0] = "todo";
+            } else if (readLineArr[0].equals("[D]")) {
+                readLineArr[0] = "deadline";
+            } else if (readLineArr[0].equals(("[E]"))) {
+                readLineArr[0] = "event";
             }
 
-            addListItemNoSave(itemType, readLineArr[1], readLine);
+            String[] newReadLineArr = Arrays.copyOfRange(readLineArr, 1, readLineArr.length - 1, String[].class);
+            newReadLineArr[0] = readLineArr[0];
+
+            addListItemBase(newReadLineArr, itemStatus);
         }
     }
 }

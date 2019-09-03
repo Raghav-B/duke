@@ -3,8 +3,8 @@ package Task;
 public class Deadline extends Task {
     private String taskType;
 
-    public Deadline(String status, String description) {
-        super(status, description);
+    public Deadline(String[] description, String status) {
+        super(description, status);
         this.taskType = "[D]";
     }
 

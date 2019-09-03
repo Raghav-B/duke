@@ -8,10 +8,9 @@ public class Task {
     private LocalDateTime dateTime;
     private DateTimeFormatter dukeDateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm");
 
-    public Task(String status, String description) {
+    public Task(String[] description, String status) {
         this.status = status;
-        String[] descriptionArr = description.split(" ", 0);
-        this.description = taskInputParse(descriptionArr);
+        this.description = taskInputParse(description);
     }
 
     public void setStatus(String status) {
@@ -22,9 +21,8 @@ public class Task {
         return this.status;
     }
 
-    public void setDescription(String description) {
-        String[] descriptionArr = description.split(" ", 0);
-        this.description = taskInputParse(descriptionArr);
+    public void setDescription(String[] description) {
+        this.description = taskInputParse(description);
     }
 
     public String getDescription() {

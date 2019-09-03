@@ -3,8 +3,8 @@ package Task;
 public class Event extends Task {
     private String taskType;
 
-    public Event(String status, String description) {
-        super(status, description);
+    public Event(String[] description, String status) {
+        super(description, status);
         this.taskType = "[E]";
     }
 
