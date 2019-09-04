@@ -1,3 +1,5 @@
+import DukeException.IncompleteListEntryException;
+import DukeException.UnknownDateTimeFormatException;
 import Task.*;
 
 import javax.swing.*;
@@ -27,16 +29,18 @@ public class TaskGroup {
         }
     }
 
-    public void addListItemBase(String[] inputArr, String itemStatus) {
-        Task curTask = new Task(Arrays.copyOfRange(inputArr, 1, inputArr.length - 1, String[].class), itemStatus);
+    public void addListItemBase(String[] inputArr, String itemStatus) throws UnknownDateTimeFormatException,
+            IncompleteListEntryException {
+
+        Task curTask = new Task(Arrays.copyOfRange(inputArr, 1, inputArr.length, String[].class), itemStatus);
 
         String taskType = inputArr[0].toLowerCase();
         if (taskType.equals("todo")) {
-            curTask = new ToDo(Arrays.copyOfRange(inputArr, 1, inputArr.length - 1, String[].class), itemStatus);
+            curTask = new ToDo(Arrays.copyOfRange(inputArr, 1, inputArr.length, String[].class), itemStatus);
         } else if (taskType.equals("deadline")) {
-            curTask = new Deadline(Arrays.copyOfRange(inputArr, 1, inputArr.length - 1, String[].class), itemStatus);
+            curTask = new Deadline(Arrays.copyOfRange(inputArr, 1, inputArr.length, String[].class), itemStatus);
         } else if (taskType.equals(("event"))) {
-            curTask = new Event(Arrays.copyOfRange(inputArr, 1, inputArr.length - 1, String[].class), itemStatus);
+            curTask = new Event(Arrays.copyOfRange(inputArr, 1, inputArr.length, String[].class), itemStatus);
         }
 
         taskList.add(curTask);
@@ -83,8 +87,7 @@ public class TaskGroup {
                 break;
             }
 
-            String[] readLineArr = readLine.split(".\\|.", 0);
-            String itemStatus = readLineArr[1];
+            String[] readLineArr = readLine.split(".\\|.| ", 0);
             if (readLineArr[0].equals("[T]")) {
                 readLineArr[0] = "todo";
             } else if (readLineArr[0].equals("[D]")) {
@@ -93,8 +96,10 @@ public class TaskGroup {
                 readLineArr[0] = "event";
             }
 
-            String[] newReadLineArr = Arrays.copyOfRange(readLineArr, 1, readLineArr.length - 1, String[].class);
+            String[] newReadLineArr = Arrays.copyOfRange(readLineArr, 1, readLineArr.length, String[].class);
+
             newReadLineArr[0] = readLineArr[0];
+            String itemStatus = readLineArr[1];
 
             addListItemBase(newReadLineArr, itemStatus);
         }

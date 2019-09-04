@@ -42,14 +42,14 @@ public class Duke {
                         //String listItem = taskInputParse(inputArr);
                         try {
                             curList.addListItem(inputArr, "[✗]");
+                            printOutput("Understood. I have added the following task to the list:\n" +
+                                    addIndent(4) + curList.getListItem(curList.getListLength() - 1).getTaskType() +
+                                    curList.getListItem(curList.getListLength() - 1).getStatus() + " " +
+                                    curList.getListItem(curList.getListLength() - 1).getDescription() + "\n" +
+                                    "Now you have " + curList.getListLength() + " tasks in your list.\n");
                         } catch(Exception e) {
                             printOutput(e.getMessage());
                         }
-                        printOutput("Understood. I have added the following task to the list:\n" +
-                                addIndent(4) + curList.getListItem(curList.getListLength() - 1).getTaskType() +
-                                curList.getListItem(curList.getListLength() - 1).getStatus() + " " +
-                                curList.getListItem(curList.getListLength() - 1).getDescription() + "\n" +
-                                "Now you have " + curList.getListLength() + " tasks in your list.\n");
                         break;
                     }
 
@@ -110,7 +110,7 @@ public class Duke {
                         unknownInput(input);
                     }
                 }
-            } catch(IncompleteCommandException | UnknownInputException | NumberFormatException b) {
+            } catch(IncompleteCommandException | UnknownCommandException | NumberFormatException b) {
                 printOutput(b.getMessage());
             }
         }
@@ -123,8 +123,8 @@ public class Duke {
         }
     }
 
-    private static void unknownInput(String input) throws UnknownInputException {
-        throw new UnknownInputException("Apologies, but '" + input + "' is an invalid input");
+    private static void unknownInput(String input) throws UnknownCommandException {
+        throw new UnknownCommandException("Apologies, but '" + input + "' is an invalid input");
     }
 
     private static void printOutput(String stringToOutput) {

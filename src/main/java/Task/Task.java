@@ -1,4 +1,7 @@
 package Task;
+import DukeException.IncompleteListEntryException;
+import DukeException.UnknownDateTimeFormatException;
+
 import java.time.*;
 import java.time.format.*;
 
@@ -8,7 +11,7 @@ public class Task {
     private LocalDateTime dateTime;
     private DateTimeFormatter dukeDateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm");
 
-    public Task(String[] description, String status) {
+    public Task(String[] description, String status) throws UnknownDateTimeFormatException, IncompleteListEntryException {
         this.status = status;
         this.description = taskInputParse(description);
     }
@@ -21,7 +24,7 @@ public class Task {
         return this.status;
     }
 
-    public void setDescription(String[] description) {
+    public void setDescription(String[] description) throws UnknownDateTimeFormatException, IncompleteListEntryException {
         this.description = taskInputParse(description);
     }
 
@@ -42,16 +45,20 @@ public class Task {
         return this.dateTime;
     }
 
-    // Handles
-    private String taskInputParse(String[] inputArr) {
-        int index = 1;
+    private String taskInputParse(String[] inputArr) throws UnknownDateTimeFormatException, IncompleteListEntryException {
+        int index = 0;
         String description = "";
         String stringDateTime = "";
         boolean dateTimeFound = false;
 
+        if (inputArr[0].equals("/by")) {
+            throw new IncompleteListEntryException("Incomplete list entry. Entry should be of format <task> /by " +
+                    "dd/mm/yyyy hhmm");
+        }
+
         for (; index < inputArr.length - 1; index++) {
             if (inputArr[index].equals("/by")) {
-                index += 1;
+                index += 1; // Move current index to next index, which refers to the start of the datetime string.
                 dateTimeFound = true;
                 break;
             } else {
@@ -61,17 +68,28 @@ public class Task {
 
         if (dateTimeFound) {
             if (inputArr.length - index == 2) {
-                setDateTime(LocalDateTime.parse(inputArr[index] + " " + inputArr[index + 1],
-                        dukeDateTimeFormat));
+                try {
+                    setDateTime(LocalDateTime.parse(inputArr[index] + " " + inputArr[index + 1],
+                            dukeDateTimeFormat));
+                } catch(Exception e) {
+                    throw new UnknownDateTimeFormatException("Unknown DateTime parameters entered. Please ensure they " +
+                            "follow this format: 'dd/mm/yyyy hhmm'");
+                }
+
+                stringDateTime = "/by ";
+                for (; index < inputArr.length - 1; index++) {
+                    stringDateTime += (inputArr[index] + " ");
+                }
+                stringDateTime += (inputArr[inputArr.length - 1]);
+
+            } else {
+                throw new UnknownDateTimeFormatException("Unknown DateTime parameters entered. Please ensure they " +
+                        "follow this format: 'dd/mm/yyyy hhmm'");
             }
 
-            stringDateTime = "(by: ";
-            for (; index < inputArr.length - 1; index++) {
-                stringDateTime += (inputArr[index] + " ");
-            }
-            stringDateTime += (inputArr[inputArr.length - 1] + ")");
         } else {
-            description += inputArr[index];
+            throw new IncompleteListEntryException("Incomplete list entry. Entry should be of format <task> /by " +
+                    "dd/mm/yyyy hhmm");
         }
 
         return description + stringDateTime;

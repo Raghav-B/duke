@@ -1,2 +1,2 @@
-[E] | [✓] | nothing
-[E] | [✓] | hate me (by: now)
+[E] | [✗] | nothing /by 04/12/1998 1800
+[T] | [✗] | oh no /by 03/04/1998 2322
