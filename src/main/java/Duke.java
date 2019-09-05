@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Scanner;
 import DukeException.*;
 
@@ -103,6 +104,28 @@ public class Duke {
                                 throw new NumberFormatException("'done' command's argument must be a numerical value.");
                             }
                         }
+                        break;
+                    }
+
+                    case "find": {
+                        incompleteCommandCheck(inputArr);
+                        //System.out.println(String.join(" ",
+                        //        Arrays.copyOfRange(inputArr, 1, inputArr.length)));
+                        TaskGroup searchList = curList.search(String.join(" ",
+                                Arrays.copyOfRange(inputArr, 1, inputArr.length)));
+
+                        if (searchList.getListLength() == 0) {
+                            printOutput("I have found no matching tasks in your list.\n");
+                        } else {
+                            String tempString = "I have found " + searchList.getListLength() + " matching tasks in your list.\n";
+                            for (int i = 0; i < searchList.getListLength(); i++) {
+                                tempString += ((i + 1) + ". " + searchList.getListItem(i).getTaskType() +
+                                        searchList.getListItem(i).getStatus() +
+                                        " " + searchList.getListItem(i).getDescription() + "\n");
+                            }
+                            printOutput(tempString);
+                        }
+
                         break;
                     }
 
