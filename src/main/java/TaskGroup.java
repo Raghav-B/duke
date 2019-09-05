@@ -10,7 +10,7 @@ import java.io.FileWriter;
 
 public class TaskGroup {
     private ArrayList<Task> taskList;
-    private String defaultSavePath = "./task_list.txt";
+    private String defaultSavePath = "D:/App Development/CS2113T_duke/duke/task_list.txt";
 
     TaskGroup() {
         taskList = new ArrayList<Task>();
@@ -107,30 +107,35 @@ public class TaskGroup {
     }
 
     public void loadList() throws Exception {
-        File f = new File(defaultSavePath);
-        BufferedReader b = new BufferedReader(new FileReader(f));
+        try {
+            File f = new File(defaultSavePath);
+            BufferedReader b = new BufferedReader(new FileReader(f));
 
-        while (true) {
-            String readLine = b.readLine();
-            if (readLine == null) {
-                break;
+            while (true) {
+                String readLine = b.readLine();
+                if (readLine == null) {
+                    break;
+                }
+
+                String[] readLineArr = readLine.split(".\\|.| ", 0);
+                if (readLineArr[0].equals("[T]")) {
+                    readLineArr[0] = "todo";
+                } else if (readLineArr[0].equals("[D]")) {
+                    readLineArr[0] = "deadline";
+                } else if (readLineArr[0].equals(("[E]"))) {
+                    readLineArr[0] = "event";
+                }
+
+                String[] newReadLineArr = Arrays.copyOfRange(readLineArr, 1, readLineArr.length, String[].class);
+
+                newReadLineArr[0] = readLineArr[0];
+                String itemStatus = readLineArr[1];
+
+                addListItemBase(newReadLineArr, itemStatus);
             }
-
-            String[] readLineArr = readLine.split(".\\|.| ", 0);
-            if (readLineArr[0].equals("[T]")) {
-                readLineArr[0] = "todo";
-            } else if (readLineArr[0].equals("[D]")) {
-                readLineArr[0] = "deadline";
-            } else if (readLineArr[0].equals(("[E]"))) {
-                readLineArr[0] = "event";
-            }
-
-            String[] newReadLineArr = Arrays.copyOfRange(readLineArr, 1, readLineArr.length, String[].class);
-
-            newReadLineArr[0] = readLineArr[0];
-            String itemStatus = readLineArr[1];
-
-            addListItemBase(newReadLineArr, itemStatus);
+        } catch(Exception e) {
+            FileWriter fw = new FileWriter(defaultSavePath);
+            fw.close();
         }
     }
 }

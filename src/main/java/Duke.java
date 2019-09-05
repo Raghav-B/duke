@@ -1,7 +1,7 @@
 import java.util.Arrays;
 import java.util.Scanner;
 import DukeException.*;
-import Task.Task;
+import Task.*;
 
 public class Duke {
     private static String logo = "____        _        \n"
