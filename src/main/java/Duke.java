@@ -34,7 +34,7 @@ public class Duke {
                     case "todo":
                     case "deadline":
                     case "event": {
-                        incompleteCommandCheck(inputArr);
+                        Parser.incompleteCommandCheck()(inputArr);
                         try {
                             curList.addListItem(inputArr, "[✗]");
                             Storage.saveList(curList);
@@ -164,16 +164,5 @@ public class Duke {
                 Ui.printOutput(b.getMessage());
             }
         }
-    }
-
-    private static void incompleteCommandCheck(String[] inputArr) throws IncompleteCommandException {
-        if (inputArr.length == 1) {
-            throw new IncompleteCommandException("'" + inputArr[0].toLowerCase() +
-                    "' command requires 1 or more arguments.");
-        }
-    }
-
-    private static void unknownInput(String input) throws UnknownCommandException {
-        throw new UnknownCommandException("Apologies, but '" + input + "' is an invalid input");
     }
 }

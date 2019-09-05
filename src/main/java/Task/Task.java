@@ -1,17 +1,14 @@
 package Task;
 import DukeException.IncompleteListEntryException;
 import DukeException.UnknownDateTimeFormatException;
-
 import java.time.*;
-import java.time.format.*;
 
 public class Task {
     private String status;
     private String description;
     private LocalDateTime dateTime;
 
-
-    public Task(String[] description, String status) throws UnknownDateTimeFormatException, IncompleteListEntryException {
+    public Task(String status, String description, LocalDateTime dateTime) throws UnknownDateTimeFormatException, IncompleteListEntryException {
         this.status = status;
         this.description = taskInputParse(description);
     }
