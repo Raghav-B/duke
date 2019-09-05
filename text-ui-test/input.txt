@@ -1,0 +1,21 @@
+list
+clear
+todo test this system /by 12/01/2020 2359
+event My birthday /by 24/02/2020 0000
+find /by
+find birthday
+list
+done 2
+list
+done 1
+done 4
+deadline finish homework /by 24/09/2019 1800
+list
+deadline
+list
+todo
+clear
+done 1
+done 2
+done 4
+bye
