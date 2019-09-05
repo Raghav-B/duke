@@ -61,6 +61,12 @@ public class TaskGroup {
         saveList();
     }
 
+    public void deleteItem(int listItemNumber) throws Exception {
+        listItemNumber -= 1;
+        taskList.remove(listItemNumber);
+        saveList();
+    }
+
     public void saveList() throws Exception {
         FileWriter fw = new FileWriter(defaultSavePath);
 
