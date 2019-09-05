@@ -4,15 +4,9 @@ import DukeException.*;
 import Task.*;
 
 public class Duke {
-    private static String logo = "____        _        \n"
-        + "|  _ \\ _   _| | _____ \n"
-        + "| | | | | | | |/ / _ \\\n"
-        + "| |_| | |_| |   <  __/\n"
-        + "|____/ \\__,_|_|\\_\\___|\n";
-
     public static void main(String[] args) {
-        System.out.print(logo + "\n");
-        printOutput("Greetings, I am Duke!\nHow may I be of assistance?\n");
+        System.out.print(Ui.logo + "\n");
+        Ui.printOutput("Greetings, I am Duke!\nHow may I be of assistance?\n");
 
         mainLoop();
     }
@@ -23,7 +17,7 @@ public class Duke {
         try {
             curList = Storage.loadList();
         } catch(Exception e) {
-            printOutput(e.getMessage());
+            Ui.printOutput(e.getMessage());
         }
 
         while (true) {
@@ -31,7 +25,7 @@ public class Duke {
                 String input = myScanner.nextLine();
 
                 if (input.toLowerCase().equals("bye")) {
-                    quitFunc();
+                    Ui.quitFunc();
                     break;
                 }
                 String[] inputArr = input.split(" ", 0);
@@ -45,10 +39,10 @@ public class Duke {
                             curList.addListItem(inputArr, "[✗]");
                             Storage.saveList(curList);
                         } catch(Exception e) {
-                            printOutput(e.getMessage());
+                            Ui.printOutput(e.getMessage());
                         }
-                        printOutput("Understood. I have added the following task to the list:\n" +
-                                addIndent(4) + curList.getListItem(curList.getListLength() - 1).getTaskType() +
+                        Ui.printOutput("Understood. I have added the following task to the list:\n" +
+                                Ui.addIndent(4) + curList.getListItem(curList.getListLength() - 1).getTaskType() +
                                 curList.getListItem(curList.getListLength() - 1).getStatus() + " " +
                                 curList.getListItem(curList.getListLength() - 1).getDescription() + "\n" +
                                 "Now you have " + curList.getListLength() + " task(s) in your list.\n");
@@ -57,7 +51,7 @@ public class Duke {
 
                     case "list": {
                         if (curList.getListLength() == 0) {
-                            printOutput("Your task list is currently empty.\n");
+                            Ui.printOutput("Your task list is currently empty.\n");
                         } else {
                             String tempString = "Now listing items in your task list:\n";
                             for (int i = 1; i < curList.getListLength() + 1; i++) {
@@ -65,7 +59,7 @@ public class Duke {
                                         curList.getListItem(i - 1).getStatus() +
                                         " " + curList.getListItem(i - 1).getDescription() + "\n");
                             }
-                            printOutput(tempString);
+                            Ui.printOutput(tempString);
                         }
                         break;
                     }
@@ -73,32 +67,32 @@ public class Duke {
                     case "clear": {
                         int tempListLength = curList.getListLength();
                         curList.clearList();
-                        printOutput("I have cleared your task list of " +
+                        Ui.printOutput("I have cleared your task list of " +
                                 tempListLength + " items.\n");
                         break;
                     }
 
                     case "done": {
                         if (inputArr.length == 1) {
-                            printOutput("Please input a task number to mark as complete.\n");
+                            Ui.printOutput("Please input a task number to mark as complete.\n");
                         } else {
                             try {
                                 int listNumCompleted = Integer.parseInt(inputArr[1]);
 
                                 if (curList.getListLength() == 0) {
-                                    printOutput("There are no tasks to complete.\n");
+                                    Ui.printOutput("There are no tasks to complete.\n");
                                 } else if (listNumCompleted > curList.getListLength()) {
-                                    printOutput("My apologies. There is no task numbered " + listNumCompleted +
+                                    Ui.printOutput("My apologies. There is no task numbered " + listNumCompleted +
                                             " in your task list.\n");
                                 } else {
                                     curList.markItemComplete(listNumCompleted);
                                     try {
                                         Storage.saveList(curList);
                                     } catch(Exception e) {
-                                        printOutput(e.getMessage());
+                                        Ui.printOutput(e.getMessage());
                                     }
-                                    printOutput("Splendid. I have marked the following task as completed:\n" +
-                                            addIndent(4) + curList.getListItem(listNumCompleted - 1).getTaskType() +
+                                    Ui.printOutput("Splendid. I have marked the following task as completed:\n" +
+                                            Ui.addIndent(4) + curList.getListItem(listNumCompleted - 1).getTaskType() +
                                             curList.getListItem(listNumCompleted - 1).getStatus() +
                                             " " + curList.getListItem(listNumCompleted - 1).getDescription() + "\n");
                                 }
@@ -115,7 +109,7 @@ public class Duke {
                                 Arrays.copyOfRange(inputArr, 1, inputArr.length)));
 
                         if (searchList.getListLength() == 0) {
-                            printOutput("I have found no matching tasks in your list.\n");
+                            Ui.printOutput("I have found no matching tasks in your list.\n");
                         } else {
                             String tempString = "I have found " + searchList.getListLength() + " matching tasks in your list.\n";
                             for (int i = 0; i < searchList.getListLength(); i++) {
@@ -123,7 +117,7 @@ public class Duke {
                                         searchList.getListItem(i).getStatus() +
                                         " " + searchList.getListItem(i).getDescription() + "\n");
                             }
-                            printOutput(tempString);
+                            Ui.printOutput(tempString);
                         }
 
                         break;
@@ -131,28 +125,28 @@ public class Duke {
 
                     case "delete": {
                         if (inputArr.length == 1) {
-                            printOutput("Please input a task number to delete.\n");
+                            Ui.printOutput("Please input a task number to delete.\n");
                         } else {
                             try {
                                 int listNumToDelete = Integer.parseInt(inputArr[1]);
 
                                 if (curList.getListLength() == 0) {
-                                    printOutput("There are no tasks to delete.\n");
+                                    Ui.printOutput("There are no tasks to delete.\n");
                                 } else if (listNumToDelete > curList.getListLength()) {
-                                    printOutput("My apologies. There is no task numbered " + listNumToDelete +
+                                    Ui.printOutput("My apologies. There is no task numbered " + listNumToDelete +
                                             " in your task list.\n");
                                 } else {
                                     Task itemToDelete = curList.getListItem(listNumToDelete - 1);
                                     curList.deleteItem(listNumToDelete);
-                                    printOutput("As requested, I have deleted the following task:\n" +
-                                            addIndent(4) + itemToDelete.getTaskType() +
+                                    Ui.printOutput("As requested, I have deleted the following task:\n" +
+                                            Ui.addIndent(4) + itemToDelete.getTaskType() +
                                             itemToDelete.getStatus() +
                                             " " + itemToDelete.getDescription() + "\n" +
                                             "Now you have " + curList.getListLength() + " task(s) in your list.\n");
                                     try {
                                         Storage.saveList(curList);
                                     } catch(Exception e) {
-                                        printOutput(e.getMessage());
+                                        Ui.printOutput(e.getMessage());
                                     }
                                 }
                             } catch(NumberFormatException e) {
@@ -167,7 +161,7 @@ public class Duke {
                     }
                 }
             } catch(IncompleteCommandException | UnknownCommandException | NumberFormatException b) {
-                printOutput(b.getMessage());
+                Ui.printOutput(b.getMessage());
             }
         }
     }
@@ -181,34 +175,5 @@ public class Duke {
 
     private static void unknownInput(String input) throws UnknownCommandException {
         throw new UnknownCommandException("Apologies, but '" + input + "' is an invalid input");
-    }
-
-    private static void printOutput(String stringToOutput) {
-        System.out.println(addIndent() + "____________________________________________________________");
-
-        String[] linesToPrint = stringToOutput.split("\n", 0);
-        for (int i = 0; i < linesToPrint.length; i++) {
-            System.out.println(addIndent() + linesToPrint[i]);
-        }
-
-        System.out.println(addIndent() + "____________________________________________________________\n");
-    }
-    private static String addIndent() {
-        return "        ";
-    }
-    private static String addIndent(int indentSize) {
-        String indent = "";
-        for (int i = 0; i < indentSize; i++) {
-            indent += " ";
-        }
-        return indent;
-    }
-
-    private static void quitFunc() {
-        printOutput("Farewell. I do hope to see you again.\n");
-    }
-    private static void quitFunc(String optionalOutput) {
-        printOutput(optionalOutput);
-        printOutput("Farewell. I do hope to see you again.");
     }
 }
