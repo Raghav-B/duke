@@ -19,9 +19,9 @@ public class Duke {
 
     private static void mainLoop() {
         Scanner myScanner = new Scanner(System.in);
-        TaskGroup curList = new TaskGroup();
+        TaskList curList = new TaskList();
         try {
-            curList.loadList();
+            curList = Storage.loadList();
         } catch(Exception e) {
             printOutput(e.getMessage());
         }
@@ -41,17 +41,17 @@ public class Duke {
                     case "deadline":
                     case "event": {
                         incompleteCommandCheck(inputArr);
-                        //String listItem = taskInputParse(inputArr);
                         try {
                             curList.addListItem(inputArr, "[✗]");
-                            printOutput("Understood. I have added the following task to the list:\n" +
-                                    addIndent(4) + curList.getListItem(curList.getListLength() - 1).getTaskType() +
-                                    curList.getListItem(curList.getListLength() - 1).getStatus() + " " +
-                                    curList.getListItem(curList.getListLength() - 1).getDescription() + "\n" +
-                                    "Now you have " + curList.getListLength() + " task(s) in your list.\n");
+                            Storage.saveList(curList);
                         } catch(Exception e) {
                             printOutput(e.getMessage());
                         }
+                        printOutput("Understood. I have added the following task to the list:\n" +
+                                addIndent(4) + curList.getListItem(curList.getListLength() - 1).getTaskType() +
+                                curList.getListItem(curList.getListLength() - 1).getStatus() + " " +
+                                curList.getListItem(curList.getListLength() - 1).getDescription() + "\n" +
+                                "Now you have " + curList.getListLength() + " task(s) in your list.\n");
                         break;
                     }
 
@@ -91,15 +91,16 @@ public class Duke {
                                     printOutput("My apologies. There is no task numbered " + listNumCompleted +
                                             " in your task list.\n");
                                 } else {
+                                    curList.markItemComplete(listNumCompleted);
                                     try {
-                                        curList.markItemComplete(listNumCompleted);
-                                        printOutput("Splendid. I have marked the following task as completed:\n" +
-                                                addIndent(4) + curList.getListItem(listNumCompleted - 1).getTaskType() +
-                                                curList.getListItem(listNumCompleted - 1).getStatus() +
-                                                " " + curList.getListItem(listNumCompleted - 1).getDescription() + "\n");
+                                        Storage.saveList(curList);
                                     } catch(Exception e) {
                                         printOutput(e.getMessage());
                                     }
+                                    printOutput("Splendid. I have marked the following task as completed:\n" +
+                                            addIndent(4) + curList.getListItem(listNumCompleted - 1).getTaskType() +
+                                            curList.getListItem(listNumCompleted - 1).getStatus() +
+                                            " " + curList.getListItem(listNumCompleted - 1).getDescription() + "\n");
                                 }
                             } catch(NumberFormatException e) {
                                 throw new NumberFormatException("'done' command's argument must be a numerical value.");
@@ -110,9 +111,7 @@ public class Duke {
 
                     case "find": {
                         incompleteCommandCheck(inputArr);
-                        //System.out.println(String.join(" ",
-                        //        Arrays.copyOfRange(inputArr, 1, inputArr.length)));
-                        TaskGroup searchList = curList.search(String.join(" ",
+                        TaskList searchList = curList.search(String.join(" ",
                                 Arrays.copyOfRange(inputArr, 1, inputArr.length)));
 
                         if (searchList.getListLength() == 0) {
@@ -144,21 +143,18 @@ public class Duke {
                                             " in your task list.\n");
                                 } else {
                                     Task itemToDelete = curList.getListItem(listNumToDelete - 1);
-
+                                    curList.deleteItem(listNumToDelete);
+                                    printOutput("As requested, I have deleted the following task:\n" +
+                                            addIndent(4) + itemToDelete.getTaskType() +
+                                            itemToDelete.getStatus() +
+                                            " " + itemToDelete.getDescription() + "\n" +
+                                            "Now you have " + curList.getListLength() + " task(s) in your list.\n");
                                     try {
-                                        curList.deleteItem(listNumToDelete);
-                                        printOutput("As requested, I have deleted the following task:\n" +
-                                                addIndent(4) + itemToDelete.getTaskType() +
-                                                itemToDelete.getStatus() +
-                                                " " + itemToDelete.getDescription() + "\n" +
-                                                "Now you have " + curList.getListLength() + " task(s) in your list.\n");
+                                        Storage.saveList(curList);
                                     } catch(Exception e) {
                                         printOutput(e.getMessage());
                                     }
-
-
                                 }
-
                             } catch(NumberFormatException e) {
                                 throw new NumberFormatException("'delete' command's argument must be a numerical value.");
                             }
