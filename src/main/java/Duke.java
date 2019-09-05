@@ -1,6 +1,7 @@
 import java.util.Arrays;
 import java.util.Scanner;
 import DukeException.*;
+import Task.Task;
 
 public class Duke {
     private static String logo = "____        _        \n"
@@ -47,7 +48,7 @@ public class Duke {
                                     addIndent(4) + curList.getListItem(curList.getListLength() - 1).getTaskType() +
                                     curList.getListItem(curList.getListLength() - 1).getStatus() + " " +
                                     curList.getListItem(curList.getListLength() - 1).getDescription() + "\n" +
-                                    "Now you have " + curList.getListLength() + " tasks in your list.\n");
+                                    "Now you have " + curList.getListLength() + " task(s) in your list.\n");
                         } catch(Exception e) {
                             printOutput(e.getMessage());
                         }
@@ -92,13 +93,13 @@ public class Duke {
                                 } else {
                                     try {
                                         curList.markItemComplete(listNumCompleted);
+                                        printOutput("Splendid. I have marked the following task as completed:\n" +
+                                                addIndent(4) + curList.getListItem(listNumCompleted - 1).getTaskType() +
+                                                curList.getListItem(listNumCompleted - 1).getStatus() +
+                                                " " + curList.getListItem(listNumCompleted - 1).getDescription() + "\n");
                                     } catch(Exception e) {
                                         printOutput(e.getMessage());
                                     }
-                                    printOutput("Splendid. I have marked the following task as completed:\n" +
-                                            addIndent(4) + curList.getListItem(listNumCompleted - 1).getTaskType() +
-                                            curList.getListItem(listNumCompleted - 1).getStatus() +
-                                            " " + curList.getListItem(listNumCompleted - 1).getDescription() + "\n");
                                 }
                             } catch(NumberFormatException e) {
                                 throw new NumberFormatException("'done' command's argument must be a numerical value.");
@@ -126,6 +127,42 @@ public class Duke {
                             printOutput(tempString);
                         }
 
+                        break;
+                    }
+
+                    case "delete": {
+                        if (inputArr.length == 1) {
+                            printOutput("Please input a task number to delete.\n");
+                        } else {
+                            try {
+                                int listNumToDelete = Integer.parseInt(inputArr[1]);
+
+                                if (curList.getListLength() == 0) {
+                                    printOutput("There are no tasks to delete.\n");
+                                } else if (listNumToDelete > curList.getListLength()) {
+                                    printOutput("My apologies. There is no task numbered " + listNumToDelete +
+                                            " in your task list.\n");
+                                } else {
+                                    Task itemToDelete = curList.getListItem(listNumToDelete - 1);
+
+                                    try {
+                                        curList.deleteItem(listNumToDelete);
+                                        printOutput("As requested, I have deleted the following task:\n" +
+                                                addIndent(4) + itemToDelete.getTaskType() +
+                                                itemToDelete.getStatus() +
+                                                " " + itemToDelete.getDescription() + "\n" +
+                                                "Now you have " + curList.getListLength() + " task(s) in your list.\n");
+                                    } catch(Exception e) {
+                                        printOutput(e.getMessage());
+                                    }
+
+
+                                }
+
+                            } catch(NumberFormatException e) {
+                                throw new NumberFormatException("'delete' command's argument must be a numerical value.");
+                            }
+                        }
                         break;
                     }
 
