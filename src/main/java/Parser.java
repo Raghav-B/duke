@@ -20,15 +20,16 @@ public class Parser {
         String description = "";
         int index = 0;
         while (!inputArr[index].equals("/by")) {
-            if (index >= inputArr.length) {
-                throw new IncompleteListEntryException("Incomplete list entry. Entry should be of format <task> /by " +
-                        "dd/mm/yyyy hhmm");
-            }
             if (index != 0) {
                 description += " ";
             }
             description += inputArr[index];
+
             index++;
+            if (index >= inputArr.length) {
+                throw new IncompleteListEntryException("Incomplete list entry. Entry should be of format <task> /by " +
+                        "dd/mm/yyyy hhmm");
+            }
         }
         return description;
     }

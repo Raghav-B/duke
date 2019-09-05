@@ -24,10 +24,6 @@ public class Task {
         return this.status;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getDescription() {
         return this.description;
     }
