@@ -1,36 +1,23 @@
-import DukeException.*;
 import Task.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class TaskList {
     private ArrayList<Task> taskListInternal;
 
-    TaskList() {
+    public TaskList() {
         taskListInternal = new ArrayList<Task>();
     }
 
-    public void addListItem(String[] inputArr, String itemStatus) throws Exception {
-        addListItemBase(inputArr, itemStatus);
+    public void addListItem(String itemType, String itemStatus, String description, LocalDateTime dateTime) {
+        Task curTask = new Task(itemStatus, description, dateTime);
 
-        //try {
-        //    saveList();
-        //} catch(Exception e) {
-        //    throw e;
-        //}
-    }
-
-    public void addListItemBase(String[] inputArr, String itemStatus) throws UnknownDateTimeFormatException,
-            IncompleteListEntryException {
-
-        Task curTask = new Task(Arrays.copyOfRange(inputArr, 1, inputArr.length, String[].class), itemStatus);
-
-        String taskType = inputArr[0].toLowerCase();
-        if (taskType.equals("todo")) {
-            curTask = new ToDo(Arrays.copyOfRange(inputArr, 1, inputArr.length, String[].class), itemStatus);
-        } else if (taskType.equals("deadline")) {
-            curTask = new Deadline(Arrays.copyOfRange(inputArr, 1, inputArr.length, String[].class), itemStatus);
-        } else if (taskType.equals(("event"))) {
-            curTask = new Event(Arrays.copyOfRange(inputArr, 1, inputArr.length, String[].class), itemStatus);
+        if (itemType.equals("todo")) {
+            curTask = new ToDo(itemStatus, description, dateTime);
+        } else if (itemType.equals("deadline")) {
+            curTask = new Deadline(itemStatus, description, dateTime);
+        } else if (itemType.equals(("event"))) {
+            curTask = new Event(itemStatus, description, dateTime);
         }
 
         taskListInternal.add(curTask);
@@ -48,10 +35,9 @@ public class TaskList {
         taskListInternal.clear();
     }
 
-    public void markItemComplete(int listItemNumber) {// throws Exception {
+    public void markItemComplete(int listItemNumber) {
         listItemNumber -= 1;
         taskListInternal.get(listItemNumber).setStatus("[✓]");
-        //saveList();
     }
 
     public TaskList search(String query) {
@@ -69,8 +55,8 @@ public class TaskList {
                         tempTaskType = "event";
                     }
 
-                    searchList.addListItemBase((tempTaskType + " " + getListItem(i).getDescription())
-                            .split(" ", 0), getListItem(i).getStatus());
+                    searchList.addListItem(tempTaskType, getListItem(i).getStatus(),
+                            getListItem(i).getDescription(), getListItem(i).getDateTime());
                 } catch(Exception e) {
                     System.out.println("Unhandled exception oops");
                 }
@@ -80,9 +66,8 @@ public class TaskList {
         return searchList;
     }
 
-    public void deleteItem(int listItemNumber) { //throws Exception {
+    public void deleteItem(int listItemNumber) {
         listItemNumber -= 1;
         taskListInternal.remove(listItemNumber);
-        //saveList();
     }
 }

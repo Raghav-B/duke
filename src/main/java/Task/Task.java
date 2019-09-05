@@ -1,16 +1,19 @@
 package Task;
-import DukeException.IncompleteListEntryException;
-import DukeException.UnknownDateTimeFormatException;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 
 public class Task {
     private String status;
     private String description;
     private LocalDateTime dateTime;
 
-    public Task(String status, String description, LocalDateTime dateTime) throws UnknownDateTimeFormatException, IncompleteListEntryException {
+    public DateTimeFormatter dukeDateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm");
+
+
+    public Task(String status, String description, LocalDateTime dateTime) {
         this.status = status;
-        this.description = taskInputParse(description);
+        this.description = description;
+        this.dateTime = dateTime;
     }
 
     public void setStatus(String status) {
@@ -21,8 +24,8 @@ public class Task {
         return this.status;
     }
 
-    public void setDescription(String[] description) throws UnknownDateTimeFormatException, IncompleteListEntryException {
-        this.description = taskInputParse(description);
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getDescription() {
@@ -33,13 +36,32 @@ public class Task {
         return "default";
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
-        //System.out.println(dateTime);
-    }
-
     public LocalDateTime getDateTime() {
         return this.dateTime;
+    }
+
+    public String getDateTimeSaveString() {
+        return dateTime.format(dukeDateTimeFormat);
+    }
+
+    public String getDateTimeString() {
+        String dateString = dateTime.getDayOfMonth() + " " + dateTime.getMonth().name() +
+                " " + dateTime.getYear() + ", ";
+
+        String timeString = "";
+        if (Integer.toString(dateTime.getHour()).length() != 2) {
+            timeString += "0" + dateTime.getHour();
+        } else {
+            timeString += Integer.toString(dateTime.getHour());
+        }
+        if (Integer.toString(dateTime.getMinute()).length() != 2) {
+            timeString += "0" + dateTime.getMinute();
+        } else {
+            timeString += Integer.toString(dateTime.getMinute());
+        }
+        timeString += " hours.";
+
+        return dateString + timeString;
     }
 }
 

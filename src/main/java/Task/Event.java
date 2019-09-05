@@ -1,14 +1,11 @@
 package Task;
-
-import DukeException.IncompleteListEntryException;
-import DukeException.UnknownDateTimeFormatException;
+import java.time.LocalDateTime;
 
 public class Event extends Task {
     private String taskType;
 
-    public Event(String[] description, String status) throws UnknownDateTimeFormatException,
-            IncompleteListEntryException {
-        super(description, status);
+    public Event(String itemStatus, String description, LocalDateTime dateTime) {
+        super(itemStatus, description, dateTime);
         this.taskType = "[E]";
     }
 

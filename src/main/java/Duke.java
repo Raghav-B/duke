@@ -1,3 +1,4 @@
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Scanner;
 import DukeException.*;
@@ -23,28 +24,30 @@ public class Duke {
         while (true) {
             try {
                 String input = myScanner.nextLine();
-
                 if (input.toLowerCase().equals("bye")) {
                     Ui.quitFunc();
                     break;
                 }
-                String[] inputArr = input.split(" ", 0);
 
+                String[] inputArr = input.split(" ", 0);
                 switch (inputArr[0].toLowerCase()) {
                     case "todo":
                     case "deadline":
                     case "event": {
-                        Parser.incompleteCommandCheck()(inputArr);
-                        try {
-                            curList.addListItem(inputArr, "[✗]");
-                            Storage.saveList(curList);
-                        } catch(Exception e) {
-                            Ui.printOutput(e.getMessage());
-                        }
+                        Parser.incompleteCommandCheck(inputArr);
+                        String itemType = inputArr[0].toLowerCase();
+                        String itemStatus = "[✗]";
+                        String description = Parser.descriptionParse(Arrays.copyOfRange(inputArr, 1, inputArr.length));
+                        LocalDateTime dateTime = Parser.dateTimeParse(Arrays.copyOfRange(inputArr, 1, inputArr.length));
+
+                        curList.addListItem(itemType, itemStatus, description, dateTime);
+                        Storage.saveList(curList);
+
                         Ui.printOutput("Understood. I have added the following task to the list:\n" +
                                 Ui.addIndent(4) + curList.getListItem(curList.getListLength() - 1).getTaskType() +
                                 curList.getListItem(curList.getListLength() - 1).getStatus() + " " +
-                                curList.getListItem(curList.getListLength() - 1).getDescription() + "\n" +
+                                curList.getListItem(curList.getListLength() - 1).getDescription() +
+                                " by " + curList.getListItem(curList.getListLength() - 1).getDateTimeString() + "\n" +
                                 "Now you have " + curList.getListLength() + " task(s) in your list.\n");
                         break;
                     }
@@ -57,7 +60,8 @@ public class Duke {
                             for (int i = 1; i < curList.getListLength() + 1; i++) {
                                 tempString += (i + ". " + curList.getListItem(i - 1).getTaskType() +
                                         curList.getListItem(i - 1).getStatus() +
-                                        " " + curList.getListItem(i - 1).getDescription() + "\n");
+                                        " " + curList.getListItem(i - 1).getDescription() +
+                                        " by " + curList.getListItem(i - 1).getDateTimeString() + "\n");
                             }
                             Ui.printOutput(tempString);
                         }
@@ -94,7 +98,8 @@ public class Duke {
                                     Ui.printOutput("Splendid. I have marked the following task as completed:\n" +
                                             Ui.addIndent(4) + curList.getListItem(listNumCompleted - 1).getTaskType() +
                                             curList.getListItem(listNumCompleted - 1).getStatus() +
-                                            " " + curList.getListItem(listNumCompleted - 1).getDescription() + "\n");
+                                            " " + curList.getListItem(listNumCompleted - 1).getDescription() +
+                                            " by " + curList.getListItem(listNumCompleted - 1).getDateTimeString() + "\n");
                                 }
                             } catch(NumberFormatException e) {
                                 throw new NumberFormatException("'done' command's argument must be a numerical value.");
@@ -104,7 +109,7 @@ public class Duke {
                     }
 
                     case "find": {
-                        incompleteCommandCheck(inputArr);
+                        Parser.incompleteCommandCheck(inputArr);
                         TaskList searchList = curList.search(String.join(" ",
                                 Arrays.copyOfRange(inputArr, 1, inputArr.length)));
 
@@ -115,7 +120,8 @@ public class Duke {
                             for (int i = 0; i < searchList.getListLength(); i++) {
                                 tempString += ((i + 1) + ". " + searchList.getListItem(i).getTaskType() +
                                         searchList.getListItem(i).getStatus() +
-                                        " " + searchList.getListItem(i).getDescription() + "\n");
+                                        " " + searchList.getListItem(i).getDescription() +
+                                        " by " + searchList.getListItem(i).getDateTimeString() + "\n");
                             }
                             Ui.printOutput(tempString);
                         }
@@ -141,7 +147,7 @@ public class Duke {
                                     Ui.printOutput("As requested, I have deleted the following task:\n" +
                                             Ui.addIndent(4) + itemToDelete.getTaskType() +
                                             itemToDelete.getStatus() +
-                                            " " + itemToDelete.getDescription() + "\n" +
+                                            " " + itemToDelete.getDescription() + " by " + itemToDelete.getDateTimeString() + "\n" +
                                             "Now you have " + curList.getListLength() + " task(s) in your list.\n");
                                     try {
                                         Storage.saveList(curList);
@@ -157,11 +163,13 @@ public class Duke {
                     }
 
                     default: {
-                        unknownInput(input);
+                        Parser.unknownInput(input);
+                        break;
                     }
                 }
-            } catch(IncompleteCommandException | UnknownCommandException | NumberFormatException b) {
-                Ui.printOutput(b.getMessage());
+
+            } catch(Exception e) {
+                Ui.printOutput(e.getMessage());
             }
         }
     }

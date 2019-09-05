@@ -1,11 +1,12 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.io.File;
 import java.io.FileWriter;
 
 public class Storage {
-    private static String defaultSavePath = "D:/App Development/CS2113T_duke/duke/task_list.txt";
+    private static String defaultSavePath = "task_list.txt";
 
     public static void saveList(TaskList listToSave) throws Exception {
         FileWriter fw = new FileWriter(defaultSavePath);
@@ -13,7 +14,7 @@ public class Storage {
         String stringToWrite = "";
         for (int i = 0; i < listToSave.getListLength(); i++) {
             stringToWrite += (listToSave.getListItem(i).getTaskType() + " | " + listToSave.getListItem(i).getStatus() + " | " +
-                    listToSave.getListItem(i).getDescription() + "\n");
+                    listToSave.getListItem(i).getDescription() + " /by " + listToSave.getListItem(i).getDateTimeSaveString() + "\n");
         }
 
         fw.write(stringToWrite);
@@ -34,20 +35,19 @@ public class Storage {
                 }
 
                 String[] readLineArr = readLine.split(".\\|.| ", 0);
+                String itemType = "";
+                String itemStatus = readLineArr[1];
+                String description = Parser.descriptionParse(Arrays.copyOfRange(readLineArr, 2, readLineArr.length));
+                LocalDateTime dateTime = Parser.dateTimeParse(Arrays.copyOfRange(readLineArr, 2, readLineArr.length));
                 if (readLineArr[0].equals("[T]")) {
-                    readLineArr[0] = "todo";
+                    itemType = "todo";
                 } else if (readLineArr[0].equals("[D]")) {
-                    readLineArr[0] = "deadline";
+                    itemType = "deadline";
                 } else if (readLineArr[0].equals(("[E]"))) {
-                    readLineArr[0] = "event";
+                    itemType = "event";
                 }
 
-                String[] newReadLineArr = Arrays.copyOfRange(readLineArr, 1, readLineArr.length, String[].class);
-
-                newReadLineArr[0] = readLineArr[0];
-                String itemStatus = readLineArr[1];
-
-                readTaskList.addListItemBase(newReadLineArr, itemStatus);
+                readTaskList.addListItem(itemType, itemStatus, description, dateTime);
             }
         } catch(Exception e) {
             FileWriter fw = new FileWriter(defaultSavePath);
