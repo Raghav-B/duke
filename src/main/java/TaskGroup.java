@@ -64,6 +64,32 @@ public class TaskGroup {
         saveList();
     }
 
+    public TaskGroup search(String query) {
+        TaskGroup searchList = new TaskGroup();
+
+        for (int i = 0; i < getListLength(); i++) {
+            if (getListItem(i).getDescription().contains(query)) {
+                try {
+                    String tempTaskType = "";
+                    if (getListItem(i).getTaskType().equals("[T]")) {
+                        tempTaskType = "todo";
+                    } else if (getListItem(i).getTaskType().equals("[D]")) {
+                        tempTaskType = "deadline";
+                    } else if (getListItem(i).getTaskType().equals("[E]")) {
+                        tempTaskType = "event";
+                    }
+
+                    searchList.addListItemBase((tempTaskType + " " + getListItem(i).getDescription())
+                            .split(" ", 0), getListItem(i).getStatus());
+                } catch(Exception e) {
+                    System.out.println("Unhandled exception oops");
+                }
+            }
+        }
+
+        return searchList;
+    }
+
     public void saveList() throws Exception {
         FileWriter fw = new FileWriter(defaultSavePath);
 
