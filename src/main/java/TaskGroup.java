@@ -2,21 +2,18 @@ import DukeException.IncompleteListEntryException;
 import DukeException.UnknownDateTimeFormatException;
 import Task.*;
 
-import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.Arrays;
-import java.util.Vector;
+import java.util.*;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 
 public class TaskGroup {
-    private Vector<Task> taskList;
+    private ArrayList<Task> taskList;
     private String defaultSavePath = "./task_list.txt";
 
     TaskGroup() {
-        taskList = new Vector<Task>();
+        taskList = new ArrayList<Task>();
     }
 
     public void addListItem(String[] inputArr, String itemStatus) throws Exception {
