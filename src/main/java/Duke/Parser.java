@@ -8,7 +8,6 @@ import java.util.Arrays;
 public class Parser {
     private static DateTimeFormatter dukeDateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm");
 
-
     public static Command parseInput(String input) throws IncompleteCommandException,
             UnknownCommandException, IncompleteListEntryException, UnknownDateTimeFormatException,
             NumberFormatException {
