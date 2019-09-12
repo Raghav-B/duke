@@ -8,7 +8,16 @@ import java.util.Arrays;
 public class Parser {
     private static DateTimeFormatter dukeDateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm");
 
-
+    /**
+     * Handles the main parsing of the user's raw input.
+     * @param input Raw input String from user.
+     * @return Command object to later execute
+     * @throws IncompleteCommandException When user inputs incomplete command.
+     * @throws UnknownCommandException When user inputs unknown command.
+     * @throws IncompleteListEntryException When user fails to adhere to new task string format.
+     * @throws UnknownDateTimeFormatException When user has a typo in the task's datetime format.
+     * @throws NumberFormatException When 'delete' or 'done' command's argument is NaN.
+     */
     public static Command parseInput(String input) throws IncompleteCommandException,
             UnknownCommandException, IncompleteListEntryException, UnknownDateTimeFormatException,
             NumberFormatException {
@@ -70,26 +79,11 @@ public class Parser {
     }
 
     /**
-     * Checks whether command inputted by user is incomplete, i.e. if it is missing any required arguments.
-     * @param inputArr Array of words entered by user. Precondition in this case is that inputArr.length = 1
-     * @throws IncompleteCommandException When an incomplete command is input without further arguments, e.g. 'todo' or 'done'
+     * Parses the new task description from the delimited user input.
+     * @param inputArr Array for delimited user input.
+     * @return String with desired description for new task.
+     * @throws IncompleteListEntryException When user fails to adhere to new task string format.
      */
-    private static void incompleteCommandCheck(String[] inputArr) throws IncompleteCommandException {
-        if (inputArr.length == 1) {
-            throw new IncompleteCommandException("'" + inputArr[0].toLowerCase() +
-                    "' command requires 1 or more arguments.");
-        }
-    }
-
-    /**
-     *
-     * @param input
-     * @throws UnknownCommandException
-     */
-    private static void unknownInput(String input) throws UnknownCommandException {
-        throw new UnknownCommandException("Apologies, but '" + input + "' is an invalid input");
-    }
-
     public static String descriptionParse(String[] inputArr) throws IncompleteListEntryException {
         String description = "";
         int index = 0;
@@ -108,6 +102,13 @@ public class Parser {
         return description;
     }
 
+    /**
+     * Parses the new task date and time from the delimited user input.
+     * @param inputArr Array for delimited user input.
+     * @return String with desired datetime for new task.
+     * @throws UnknownDateTimeFormatException When user has a typo in the task's datetime format.
+     * @throws IncompleteListEntryException When user fails to adhere to new task string format.
+     */
     public static LocalDateTime dateTimeParse(String[] inputArr) throws UnknownDateTimeFormatException,
             IncompleteListEntryException {
         LocalDateTime dateTime;
@@ -135,13 +136,23 @@ public class Parser {
                 throw new UnknownDateTimeFormatException("Unknown DateTime parameters entered. Please ensure they " +
                         "follow this format: 'dd/mm/yyyy hhmm'");
             }
-        } else {
+        }
+
+        else {
             throw new IncompleteListEntryException("Incomplete list entry. Entry should be of format <task> /by " +
                     "dd/mm/yyyy hhmm");
         }
-
         return dateTime;
     }
 
+    static void incompleteCommandCheck(String[] inputArr) throws IncompleteCommandException {
+        if (inputArr.length == 1) {
+            throw new IncompleteCommandException("'" + inputArr[0].toLowerCase() +
+                    "' command requires 1 or more arguments.");
+        }
+    }
 
+    static void unknownInput(String input) throws UnknownCommandException {
+        throw new UnknownCommandException("Apologies, but '" + input + "' is an invalid input");
+    }
 }

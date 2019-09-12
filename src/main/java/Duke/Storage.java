@@ -1,16 +1,19 @@
 package Duke;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
+import DukeException.*;
+import java.io.*;
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.io.File;
-import java.io.FileWriter;
 
 public class Storage {
     private static String defaultSavePath = "task_list.txt";
 
-    public static void saveList(TaskList listToSave) throws Exception {
+    /**
+     * Saves the user's current task list into a text file.
+     * @param listToSave TaskList object to be saved.
+     * @throws IOException When file cannot be written to.
+     */
+    public static void saveList(TaskList listToSave) throws IOException {
         FileWriter fw = new FileWriter(defaultSavePath);
 
         String stringToWrite = "";
@@ -23,7 +26,15 @@ public class Storage {
         fw.close();
     }
 
-    public static TaskList loadList() throws Exception {
+    /**
+     * Loads a new task list from a previously saved text file.
+     * @return TaskList object containing tasks from text file.
+     * @throws IOException When file cannot be loaded from/written to.
+     * @throws IncompleteListEntryException When text format inside save file is corrupt/unrecognizable.
+     * @throws UnknownDateTimeFormatException When text format inside save file is corrupt/unrecognizable.
+     */
+    public static TaskList loadList() throws IOException, IncompleteListEntryException,
+            UnknownDateTimeFormatException  {
         TaskList readTaskList = new TaskList();
 
         try {
@@ -51,7 +62,7 @@ public class Storage {
 
                 readTaskList.addListItem(itemType, itemStatus, description, dateTime);
             }
-        } catch(Exception e) {
+        } catch(IOException e) {
             FileWriter fw = new FileWriter(defaultSavePath);
             fw.close();
         }
