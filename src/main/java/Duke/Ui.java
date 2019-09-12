@@ -1,3 +1,5 @@
+package Duke;
+
 public class Ui {
     public static String logo = "____        _        \n"
             + "|  _ \\ _   _| | _____ \n"
